@@ -1,35 +1,22 @@
 using UnityEngine;
 
-namespace KAlabs
+namespace PuzzleGames
 {
    public class PlayerInputs : MonoBehaviour
     {
-        #region Public Variables
-        #endregion
-
-        #region Private Variables
-        #endregion
-
-        #region Properties
-        #endregion
-
-        #region Unity Callbacks
-        #endregion
-
-        #region Event Callbacks
-        #endregion
-
-        #region Unity GUI Callbacks
-        #endregion
-
-        #region Public Methods
-        #endregion
-
-        #region Private Methods
-        #endregion
-
-        #region Coroutines
-        #endregion
+        [SerializeField] ShapeSpawner shapeSpawner;
+        private void Update()
+        {
+            if(Input.GetKeyDown(KeyCode.LeftArrow))
+            {
+                Debug.Log("here");
+                shapeSpawner.currentShape.MoveOneUnit(-1);
+            }
+            else if(Input.GetKeyDown(KeyCode.RightArrow))
+            {
+                shapeSpawner.currentShape.MoveOneUnit(1);
+            }
+        }
     }
 
 }

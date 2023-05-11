@@ -1,35 +1,32 @@
 using UnityEngine;
+using System;
+using Random = UnityEngine.Random;
+using System.Collections.Generic;
 
-namespace KAlabs
+namespace PuzzleGames
 {
    public class ShapeSpawner : MonoBehaviour
     {
         #region Public Variables
-        #endregion
-
-        #region Private Variables
-        #endregion
-
-        #region Properties
-        #endregion
-
-        #region Unity Callbacks
-        #endregion
-
-        #region Event Callbacks
-        #endregion
-
-        #region Unity GUI Callbacks
+        public List<Shape> shapes;
+        public Shape currentShape;
+        public Shape nextShape;
         #endregion
 
         #region Public Methods
+        [ContextMenu("Test")]
+        public void Spawn()
+        {
+            int randomIndex = Random.Range(0, shapes.Count);
+            currentShape = Instantiate(shapes[randomIndex], transform);
+            currentShape.transform.Rotate(0f, 0f, currentShape.GetRandomRotation());
+            currentShape.transform.localScale = new Vector3(currentShape.GetRandomFlip(), 1, 1);
+        }
         #endregion
 
         #region Private Methods
         #endregion
 
-        #region Coroutines
-        #endregion
     }
 
 }
