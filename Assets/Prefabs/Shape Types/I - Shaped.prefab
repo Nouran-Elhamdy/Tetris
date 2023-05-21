@@ -144,7 +144,7 @@ MonoBehaviour:
   shapeValidations:
   - shapeLayoutType: 1
     shapeRotation: 0
-    spawnPosition: {x: 0.249, y: 2.5}
+    spawnPosition: {x: 0.258, y: 2.5}
     step: 0.5
   - shapeLayoutType: 2
     shapeRotation: 90
