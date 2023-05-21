@@ -3,6 +3,7 @@ using System;
 using Random = UnityEngine.Random;
 using DG.Tweening;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace PuzzleGames
 {
@@ -12,17 +13,19 @@ namespace PuzzleGames
         #region Public Variables
 
         public ShapeType shapeType;
+        public ShapeLayoutType layoutType;
         public GameObject shapePrefab;
         public int shapeRotation = 0;
-        float step;
-        float currentRot;
         public bool canMove;
         public bool isGround;
+        public float step; 
+        public List<ShapeValidation> shapeValidations = new List<ShapeValidation>();
+
         #endregion
         public int GetRandomRotation()
         {
-            int randomIndex = Random.Range(0, Manager.ShapeManager.shapeRotations.Length);
-            shapeRotation = Manager.ShapeManager.shapeRotations[randomIndex];
+            int randomIndex = Random.Range(0, shapeValidations.Count);
+            shapeRotation = shapeValidations[randomIndex].shapeRotation;
             return shapeRotation;
         }
 
@@ -34,15 +37,14 @@ namespace PuzzleGames
 
         public void MoveInX(int sign)
         {
-            step += (sign) * 0.5f;
-            transform.position = new Vector3(step , transform.position.y, transform.position.z);
+            transform.position = new Vector3(transform.position.x + (step * sign), transform.position.y, transform.position.z);
         }
         public void MoveInY()
         {
             StartCoroutine(loopDelay());
             IEnumerator loopDelay()
             {
-                transform.position = new Vector3(transform.position.x, transform.position.y - 0.75f, transform.position.z);
+                transform.position = new Vector3(transform.position.x, transform.position.y - 0.5f, transform.position.z);
                 canMove = false;
                 yield return new WaitForSeconds(1);
                 canMove = true;
@@ -50,8 +52,7 @@ namespace PuzzleGames
         }
         public void Rotate(float rotation)
         {
-            currentRot += rotation;
-            transform.Rotate(new Vector3(transform.position.x, transform.position.y, currentRot));
+            transform.Rotate(new Vector3(transform.position.x, transform.position.y, transform.position.z + rotation));
         }
         private void OnCollisionEnter2D(Collision2D collision)
         {
@@ -72,4 +73,19 @@ namespace PuzzleGames
         O_Shaped,
         S_Shaped
     }
+    public enum ShapeLayoutType
+    {
+        None,
+        Horizontal,
+        Vertical,
+    }
+    [Serializable]
+    public class ShapeValidation
+    {
+        public ShapeLayoutType shapeLayoutType;
+        public int shapeRotation;
+        public Vector2 spawnPosition;
+        public float step;
+    }
+
 }

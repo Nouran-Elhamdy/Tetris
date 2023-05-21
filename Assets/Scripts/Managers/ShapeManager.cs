@@ -6,7 +6,6 @@ namespace PuzzleGames
    public class ShapeManager : Manager
     {
         #region Public Variables
-        public readonly int[] shapeRotations = { 0, 90, 180, 270, -90, -180, -270 };
         public readonly int[] shapeScale = { -1, 1 };
         #endregion
 
