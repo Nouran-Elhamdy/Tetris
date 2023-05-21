@@ -1,6 +1,8 @@
 using UnityEngine;
 using System;
 using Random = UnityEngine.Random;
+using DG.Tweening;
+using System.Collections;
 
 namespace PuzzleGames
 {
@@ -13,35 +15,54 @@ namespace PuzzleGames
         public GameObject shapePrefab;
         public int shapeRotation = 0;
         float step;
-
-        #endregion
-
-        #region Private Variables
-
-        private readonly int[] shapeRotations = { 0, 90, 180, 270, -90, -180, -270};
-        private readonly int[] shapeScale = { -1, 1 };
-
+        float currentRot;
+        public bool canMove;
+        public bool isGround;
         #endregion
         public int GetRandomRotation()
         {
-            int randomIndex = Random.Range(0, shapeRotations.Length);
-            shapeRotation = shapeRotations[randomIndex];
+            int randomIndex = Random.Range(0, Manager.ShapeManager.shapeRotations.Length);
+            shapeRotation = Manager.ShapeManager.shapeRotations[randomIndex];
             return shapeRotation;
         }
 
         public int GetRandomFlip()
         {
-            int randomIndex = Random.Range(0, shapeScale.Length);
-            return shapeScale[randomIndex];
+            int randomIndex = Random.Range(0, Manager.ShapeManager.shapeScale.Length);
+            return Manager.ShapeManager.shapeScale[randomIndex];
         }
 
-        public void MoveOneUnit(int sign)
+        public void MoveInX(int sign)
         {
             step += (sign) * 0.5f;
             transform.position = new Vector3(step , transform.position.y, transform.position.z);
-            Debug.Log(transform.position);
         }
-
+        public void MoveInY()
+        {
+            StartCoroutine(loopDelay());
+            IEnumerator loopDelay()
+            {
+                transform.position = new Vector3(transform.position.x, transform.position.y - 0.75f, transform.position.z);
+                canMove = false;
+                yield return new WaitForSeconds(1);
+                canMove = true;
+            }
+        }
+        public void Rotate(float rotation)
+        {
+            currentRot += rotation;
+            transform.Rotate(new Vector3(transform.position.x, transform.position.y, currentRot));
+        }
+        private void OnCollisionEnter2D(Collision2D collision)
+        {
+            isGround = true; 
+            if(collision.gameObject.TryGetComponent(out Wall wall)) { }
+        }
+        private void OnCollisionExit2D(Collision2D collision)
+        {
+            isGround = false;
+            if (collision.gameObject.TryGetComponent(out Wall wall)) { }
+        }
     }
     public enum ShapeType
     {

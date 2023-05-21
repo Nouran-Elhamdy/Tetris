@@ -1,8 +1,8 @@
 using UnityEngine;
 
-namespace KAlabs
+namespace PuzzleGames
 {
-   public class UIManager : MonoBehaviour
+   public class Wall : MonoBehaviour
     {
         #region Public Variables
         #endregion

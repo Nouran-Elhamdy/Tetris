@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using System.Linq;
 using Random = UnityEngine.Random;
 using System.Collections.Generic;
 
@@ -26,7 +27,5 @@ namespace PuzzleGames
 
         #region Private Methods
         #endregion
-
     }
-
 }

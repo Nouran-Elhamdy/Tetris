@@ -54,6 +54,7 @@ MonoBehaviour:
   shapeType: 4
   shapePrefab: {fileID: 1235932219347132408}
   shapeRotation: 0
+  canMove: 1
 --- !u!50 &6936415997133852229
 Rigidbody2D:
   serializedVersion: 4
@@ -69,12 +70,12 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 0.05
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 4
+  m_Constraints: 7
 --- !u!61 &6164194971232482155
 BoxCollider2D:
   m_ObjectHideFlags: 0
