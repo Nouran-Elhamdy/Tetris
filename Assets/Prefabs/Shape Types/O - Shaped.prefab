@@ -94,7 +94,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4730858764067720409}
   - component: {fileID: 1407379474049565000}
-  - component: {fileID: 9178902490592233849}
   - component: {fileID: 2372329744844076077}
   m_Layer: 0
   m_Name: O - Shaped
@@ -138,7 +137,10 @@ MonoBehaviour:
   layoutType: 0
   shapePrefab: {fileID: 542696915467252013}
   shapeRotation: 0
-  canMove: 1
+  canMoveInY: 0
+  canRotate: 0
+  canMoveRight: 0
+  canMoveLeft: 0
   isGround: 0
   step: 0
   shapeValidations:
@@ -146,27 +148,6 @@ MonoBehaviour:
     shapeRotation: 0
     spawnPosition: {x: 0.252, y: 1.991}
     step: 0.5
---- !u!50 &9178902490592233849
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 542696915467252013}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 0
-  m_Material: {fileID: 0}
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 7
 --- !u!61 &2372329744844076077
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -177,7 +158,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: -0.0041564107, y: 0.013366461}

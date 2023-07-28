@@ -16,12 +16,20 @@ namespace PuzzleGames
         public ShapeLayoutType layoutType;
         public GameObject shapePrefab;
         public int shapeRotation = 0;
-        public bool canMove;
+        public bool canMoveInY;
+        public bool canRotate;
+        public bool canMoveRight;
+        public bool canMoveLeft;
         public bool isGround;
         public float step; 
         public List<ShapeValidation> shapeValidations = new List<ShapeValidation>();
+        int index;
 
         #endregion
+        private void Start()
+        {
+            index = (int)layoutType;
+        }
         public int GetRandomRotation()
         {
             int randomIndex = Random.Range(0, shapeValidations.Count);
@@ -45,24 +53,39 @@ namespace PuzzleGames
             IEnumerator loopDelay()
             {
                 transform.position = new Vector3(transform.position.x, transform.position.y - 0.5f, transform.position.z);
-                canMove = false;
-                yield return new WaitForSeconds(1);
-                canMove = true;
+                canMoveInY = false;
+                yield return new WaitForSeconds(2);
+                canMoveInY = true;
             }
         }
-        public void Rotate(float rotation)
+        public void Rotate()
         {
-            transform.Rotate(new Vector3(transform.position.x, transform.position.y, transform.position.z + rotation));
+            if (index == 1)
+                index = 0;
+            else
+                index = 1;
+
+            layoutType = (ShapeLayoutType)index;
+            switch (layoutType)
+            {
+                case ShapeLayoutType.Horizontal:
+                    shapeRotation = 0;
+                    break;
+                case ShapeLayoutType.Vertical:
+                    shapeRotation = 90;
+                    break;
+                default:
+                    break;
+            }
+            transform.localEulerAngles = new Vector3(transform.position.x, transform.position.y, shapeRotation);
+            StartCoroutine(RefreshTrigger());
         }
-        private void OnCollisionEnter2D(Collision2D collision)
+        IEnumerator RefreshTrigger()
         {
-            isGround = true; 
-            if(collision.gameObject.TryGetComponent(out Wall wall)) { }
-        }
-        private void OnCollisionExit2D(Collision2D collision)
-        {
-            isGround = false;
-            if (collision.gameObject.TryGetComponent(out Wall wall)) { }
+            BoxCollider2D boxCollider2D = GetComponent<BoxCollider2D>();
+            boxCollider2D.isTrigger = false;
+            yield return new WaitForSeconds(0.05f);
+            boxCollider2D.isTrigger = true;
         }
     }
     public enum ShapeType
@@ -75,7 +98,6 @@ namespace PuzzleGames
     }
     public enum ShapeLayoutType
     {
-        None,
         Horizontal,
         Vertical,
     }

@@ -3,6 +3,7 @@ using System;
 using System.Linq;
 using Random = UnityEngine.Random;
 using System.Collections.Generic;
+using System.Collections;
 
 namespace PuzzleGames
 {
@@ -12,10 +13,19 @@ namespace PuzzleGames
         public List<Shape> shapes;
         public Shape currentShape;
         public Shape nextShape;
+        bool isSpawned;
         #endregion
 
         #region Public Methods
-        [ContextMenu("Test")]
+
+        private void Update()
+        {
+            if(!isSpawned)
+            {
+                StartCoroutine(LoopSpwan());
+                isSpawned = true;
+            }
+        }
         public void Spawn()
         {
             int randomIndex = Random.Range(0, shapes.Count);
@@ -26,10 +36,18 @@ namespace PuzzleGames
             var shapeValidation = shapes[randomIndex].shapeValidations.Find(x => x.shapeRotation == currentShape.shapeRotation);
             currentShape.transform.localPosition = shapeValidation.spawnPosition;   
             currentShape.step = shapeValidation.step; 
+            currentShape.layoutType = shapeValidation.shapeLayoutType;       
         }
         #endregion
 
         #region Private Methods
         #endregion
+
+        IEnumerator LoopSpwan()
+        {
+            Spawn();
+            yield return new WaitUntil(()=> currentShape.isGround);
+            isSpawned = false;
+        }
     }
 }
