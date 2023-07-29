@@ -137,9 +137,9 @@ MonoBehaviour:
   layoutType: 0
   shapePrefab: {fileID: 542696915467252013}
   shapeRotation: 0
-  canMoveInY: 0
-  canRotate: 0
-  canMoveRight: 0
+  canMoveInY: 1
+  canRotate: 1
+  canMoveRight: 1
   canMoveLeft: 0
   isGround: 0
   step: 0

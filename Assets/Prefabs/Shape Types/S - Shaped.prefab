@@ -54,10 +54,10 @@ MonoBehaviour:
   layoutType: 0
   shapePrefab: {fileID: 1235932219347132408}
   shapeRotation: 0
-  canMoveInY: 0
-  canRotate: 0
-  canMoveRight: 0
-  canMoveLeft: 0
+  canMoveInY: 1
+  canRotate: 1
+  canMoveRight: 1
+  canMoveLeft: 1
   isGround: 0
   step: 0
   shapeValidations:
@@ -105,7 +105,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: -0.49835563, y: 0.24089324}

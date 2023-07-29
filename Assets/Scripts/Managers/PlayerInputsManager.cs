@@ -24,7 +24,7 @@ namespace PuzzleGames
 
             if(shapeSpawner.currentShape != null && shapeSpawner.currentShape.canMoveInY && !shapeSpawner.currentShape.isGround)
             {
-                shapeSpawner.currentShape.MoveInY();
+               shapeSpawner.currentShape.MoveInY();
             }
         }
 
@@ -33,8 +33,6 @@ namespace PuzzleGames
             switch (shapeSpawner.currentShape.shapeType)
             {
                 case ShapeType.I_Shaped:
-                case ShapeType.T_Shaped:
-
                     if (shapeSpawner.currentShape.layoutType == ShapeLayoutType.Vertical)
                     {
                         if (!shapeSpawner.currentShape.canMoveRight)
@@ -51,16 +49,31 @@ namespace PuzzleGames
                 case ShapeType.L_Shaped:
                     if (shapeSpawner.currentShape.layoutType == ShapeLayoutType.Horizontal)
                     {
+                        if (!shapeSpawner.currentShape.canMoveRight)
+                        {
+                            shapeSpawner.currentShape.MoveInX(-1);
+                        }
                         if (!shapeSpawner.currentShape.canMoveLeft)
                         {
                             shapeSpawner.currentShape.MoveInX(1);
                         }
                     }
                     break;
-                case ShapeType.O_Shaped:
-                    break;
+                case ShapeType.T_Shaped:
                 case ShapeType.S_Shaped:
+                    if (shapeSpawner.currentShape.layoutType == ShapeLayoutType.Vertical)
+                    {
+                        if (!shapeSpawner.currentShape.canMoveRight)
+                        {
+                            shapeSpawner.currentShape.MoveInX(-1);
+                        }
+                        if (!shapeSpawner.currentShape.canMoveLeft)
+                        {
+                            shapeSpawner.currentShape.MoveInX(1);
+                        }
+                    }
                     break;
+                   
                 default:
                     break;
             }

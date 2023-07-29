@@ -24,7 +24,6 @@ namespace PuzzleGames
         public float step; 
         public List<ShapeValidation> shapeValidations = new List<ShapeValidation>();
         int index;
-
         #endregion
         private void Start()
         {
@@ -77,7 +76,22 @@ namespace PuzzleGames
                 default:
                     break;
             }
-            transform.localEulerAngles = new Vector3(transform.position.x, transform.position.y, shapeRotation);
+
+            switch (shapeType)
+            {
+                case ShapeType.I_Shaped:
+                    transform.localEulerAngles = new Vector3(transform.position.x, transform.position.y, shapeRotation);
+                    break;
+                case ShapeType.L_Shaped:
+                case ShapeType.T_Shaped:
+                case ShapeType.S_Shaped:
+                    transform.Rotate(new Vector3(transform.position.x, transform.position.y, transform.position.z + 90));
+                    break;
+                case ShapeType.O_Shaped:
+                    break;
+                default:
+                    break;
+            }
             StartCoroutine(RefreshTrigger());
         }
         IEnumerator RefreshTrigger()
