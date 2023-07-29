@@ -8,7 +8,7 @@ using System.Collections.Generic;
 namespace PuzzleGames
 {
     [Serializable]
-   public class Shape : MonoBehaviour
+    public class Shape : MonoBehaviour
     {
         #region Public Variables
 
@@ -21,9 +21,13 @@ namespace PuzzleGames
         public bool canMoveRight;
         public bool canMoveLeft;
         public bool isGround;
-        public float step; 
+        public float step;
         public List<ShapeValidation> shapeValidations = new List<ShapeValidation>();
         int index;
+        public BoxCollider2D topCollider;
+        public BoxCollider2D botCollider;
+        public BoxCollider2D leftCollider;
+        public BoxCollider2D rightCollider;
         #endregion
         private void Start()
         {
@@ -53,7 +57,7 @@ namespace PuzzleGames
             {
                 transform.position = new Vector3(transform.position.x, transform.position.y - 0.5f, transform.position.z);
                 canMoveInY = false;
-                yield return new WaitForSeconds(2);
+                yield return new WaitForSeconds(2f);
                 canMoveInY = true;
             }
         }
@@ -101,27 +105,59 @@ namespace PuzzleGames
             yield return new WaitForSeconds(0.05f);
             boxCollider2D.isTrigger = true;
         }
-    }
-    public enum ShapeType
-    {
-        I_Shaped,
-        L_Shaped,
-        T_Shaped,
-        O_Shaped,
-        S_Shaped
-    }
-    public enum ShapeLayoutType
-    {
-        Horizontal,
-        Vertical,
-    }
-    [Serializable]
-    public class ShapeValidation
-    {
-        public ShapeLayoutType shapeLayoutType;
-        public int shapeRotation;
-        public Vector2 spawnPosition;
-        public float step;
-    }
+        //TODO transfer this code in another script for edge colliding
+        private void OnCollisionEnter2D(Collision2D collision)
+        {
+            if (topCollider.gameObject.CompareTag("Top"))
+            {
+                Debug.Log("Top " + collision.gameObject.name);
+                isGround = true;
+            }
+            else if (rightCollider.gameObject.CompareTag("Right"))
+            {
+                canMoveRight = false;
+                canMoveLeft = true;
+            }
+            else if (leftCollider.gameObject.CompareTag("Left"))
+            {
+                canMoveLeft = false;
+                canMoveRight = true;
 
+            }
+        }
+        private void OnCollisionExit2D(Collision2D collision)
+        {
+            if (rightCollider.gameObject.CompareTag("Right"))
+            {
+                canMoveRight = true;
+            }
+            else if (leftCollider.gameObject.CompareTag("Left"))
+            {
+                canMoveLeft = true;
+            }
+        }
+    }
 }
+public enum ShapeType
+{
+    I_Shaped,
+    L_Shaped,
+    T_Shaped,
+    O_Shaped,
+    S_Shaped
+}
+public enum ShapeLayoutType
+{
+    Horizontal,
+    Vertical,
+}
+[Serializable]
+public class ShapeValidation
+{
+    public ShapeLayoutType shapeLayoutType;
+    public int shapeRotation;
+    public Vector2 spawnPosition;
+    public float step;
+}
+
+

@@ -6,11 +6,12 @@ namespace PuzzleGames
    public class Wall : MonoBehaviour
     {
         [SerializeField] ShapeSpawner shapeSpawner;
-        private void OnTriggerEnter2D(Collider2D collision)
+
+        private void OnCollisionEnter2D(Collision2D collision)
         {
             if (collision.gameObject.TryGetComponent(out Shape shape))
             {
-                if(shapeSpawner.currentShape == shape)
+                if (shapeSpawner.currentShape == shape)
                 {
                     if (tag == "Bottom")
                     {
@@ -27,11 +28,11 @@ namespace PuzzleGames
                         shape.canMoveRight = true;
 
                     }
-                        
+
                 }
             }
         }
-        private void OnTriggerExit2D(Collider2D collision)
+        private void OnCollisionExit2D(Collision2D collision)
         {
             if (collision.gameObject.TryGetComponent(out Shape shape))
             {
@@ -48,7 +49,6 @@ namespace PuzzleGames
                 }
             }
         }
-       
     }
 
 }
