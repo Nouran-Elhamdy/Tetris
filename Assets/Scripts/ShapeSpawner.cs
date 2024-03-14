@@ -13,17 +13,19 @@ namespace PuzzleGames
         public List<Shape> shapes;
         public Shape currentShape;
         public Shape nextShape;
-        bool isSpawned;
+        public bool canSpawn;
         #endregion
 
         #region Public Methods
-
+        private void Start()
+        {
+            Spawn();    
+        }
         private void Update()
         {
-            if(!isSpawned)
+            if(currentShape.isGround && canSpawn)
             {
-                StartCoroutine(LoopSpwan());
-                isSpawned = true;
+                Spawn();   
             }
         }
         public void Spawn()
@@ -43,11 +45,5 @@ namespace PuzzleGames
         #region Private Methods
         #endregion
 
-        IEnumerator LoopSpwan()
-        {
-            Spawn();
-            yield return new WaitUntil(()=> currentShape.isGround);
-            isSpawned = false;
-        }
     }
 }

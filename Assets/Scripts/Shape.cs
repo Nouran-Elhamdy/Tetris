@@ -57,7 +57,7 @@ namespace PuzzleGames
             {
                 transform.position = new Vector3(transform.position.x, transform.position.y - 0.5f, transform.position.z);
                 canMoveInY = false;
-                yield return new WaitForSeconds(2f);
+                yield return new WaitForSeconds(0.5f);
                 canMoveInY = true;
             }
         }
@@ -110,8 +110,12 @@ namespace PuzzleGames
         {
             if (topCollider.gameObject.CompareTag("Top"))
             {
-                Debug.Log("Top " + collision.gameObject.name);
-                isGround = true;
+                if(collision.gameObject.GetComponent<Shape>())
+                {
+                    collision.gameObject.GetComponent<Shape>().isGround = true;
+                    canMoveRight = false;
+                    canMoveLeft = false;
+                }
             }
             else if (rightCollider.gameObject.CompareTag("Right"))
             {
@@ -120,9 +124,10 @@ namespace PuzzleGames
             }
             else if (leftCollider.gameObject.CompareTag("Left"))
             {
+              
+
                 canMoveLeft = false;
                 canMoveRight = true;
-
             }
         }
         private void OnCollisionExit2D(Collision2D collision)

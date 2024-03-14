@@ -1,35 +1,37 @@
+using PuzzleGames;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace KAlabs
 {
-   public class LineChecker : MonoBehaviour
+    public class LineChecker : MonoBehaviour
     {
-        #region Public Variables
-        #endregion
+        public bool isFinishLine;
+        public List<Tile> tiles = new List<Tile>();
+        public ShapeSpawner spawner;
 
-        #region Private Variables
-        #endregion
+        private void Update()
+        {
+            CheckIfTouched();
+        }
+        public void CheckIfTouched()
+        {
+            if (isFinishLine) 
+            {
+                bool isOccupied = tiles.Any(tile => tile.isOccupied == true);
 
-        #region Properties
-        #endregion
-
-        #region Unity Callbacks
-        #endregion
-
-        #region Event Callbacks
-        #endregion
-
-        #region Unity GUI Callbacks
-        #endregion
-
-        #region Public Methods
-        #endregion
-
-        #region Private Methods
-        #endregion
-
-        #region Coroutines
-        #endregion
+                if(isOccupied) 
+                {
+                  spawner.canSpawn = false;    
+                }
+                else
+                {
+                    spawner.canSpawn = true;
+                }
+            }
+          
+        }
     }
 
 }

@@ -1,35 +1,23 @@
+using PuzzleGames;
 using UnityEngine;
 
 namespace KAlabs
 {
-   public class Tile : MonoBehaviour
+    public class Tile : MonoBehaviour
     {
-        #region Public Variables
-        #endregion
+        public bool isOccupied;
 
-        #region Private Variables
-        #endregion
-
-        #region Properties
-        #endregion
-
-        #region Unity Callbacks
-        #endregion
-
-        #region Event Callbacks
-        #endregion
-
-        #region Unity GUI Callbacks
-        #endregion
-
-        #region Public Methods
-        #endregion
-
-        #region Private Methods
-        #endregion
-
-        #region Coroutines
-        #endregion
+        private void OnTriggerEnter2D(Collider2D collision)
+        {
+            if (collision.gameObject.TryGetComponent(out Tile tile))
+            {
+                isOccupied = true;
+            }
+        }
+        private void OnTriggerExit2D(Collider2D collision)
+        {
+            isOccupied = false;
+        }
     }
 
 }

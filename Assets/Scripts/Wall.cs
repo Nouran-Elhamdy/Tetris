@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace PuzzleGames
 {
-   public class Wall : MonoBehaviour
+    public class Wall : MonoBehaviour
     {
         [SerializeField] ShapeSpawner shapeSpawner;
 
