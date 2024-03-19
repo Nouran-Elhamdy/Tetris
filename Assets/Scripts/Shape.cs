@@ -109,6 +109,8 @@ namespace PuzzleGames
         }
         public void Rotate()
         {
+            if (shapeType == ShapeType.O_Shaped) return;
+
             transform.Rotate(new Vector3(0, 0, -90));
 
             if(!IsValidRotation())
