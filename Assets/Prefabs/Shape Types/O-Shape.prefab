@@ -78,7 +78,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.32, y: 0.32}
+  m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -93,6 +93,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8076611543029004958}
+  - component: {fileID: 3729768696900346688}
   m_Layer: 0
   m_Name: O-Shape
   m_TagString: Untagged
@@ -119,6 +120,32 @@ Transform:
   - {fileID: 2793371654329513072}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3729768696900346688
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4240885716900031124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a58aaa78c835bf4b9a11558a3453c70, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shapeType: 3
+  shapePrefab: {fileID: 0}
+  canMoveInY: 1
+  rectInt:
+    x: 0
+    y: 0
+    width: 10
+    height: 20
+  isLocked: 0
+  tiles:
+  - {fileID: 6789162208034682524}
+  - {fileID: 1490043171220466408}
+  - {fileID: 3102328250216095393}
+  - {fileID: 2793371654329513072}
 --- !u!1 &6981908875374599306
 GameObject:
   m_ObjectHideFlags: 0
@@ -197,7 +224,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.32, y: 0.32}
+  m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -281,7 +308,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.32, y: 0.32}
+  m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -365,7 +392,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.32, y: 0.32}
+  m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1

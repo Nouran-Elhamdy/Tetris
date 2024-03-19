@@ -25,22 +25,22 @@ namespace PuzzleGames
         {
             if (currentShape == null) return;
 
-            if(currentShape.isGrounded && canSpawn)
-            {
-                Spawn();   
-            }
+            //if(currentShape.isGrounded && canSpawn)
+            //{
+            //    Spawn();   
+            //}
         }
         public void Spawn()
         {
             int randomIndex = Random.Range(0, shapes.Count);
             currentShape = Instantiate(shapes[randomIndex]);
-            currentShape.transform.Rotate(0f, 0f, currentShape.GetRandomRotation());
+           // currentShape.transform.Rotate(0f, 0f, currentShape.GetRandomRotation());
             currentShape.transform.localScale = new Vector3(currentShape.GetRandomFlip(), 1, 1);
            
-            var shapeValidation = shapes[randomIndex].shapeValidations.Find(x => x.shapeRotation == currentShape.shapeRotation);
-            currentShape.transform.localPosition = shapeValidation.spawnPosition;   
-            currentShape.step = shapeValidation.step; 
-            currentShape.layoutType = shapeValidation.shapeLayoutType;       
+            //var shapeValidation = shapes[randomIndex].shapeValidations.Find(x => x.shapeRotation == currentShape.shapeRotation);
+            //currentShape.transform.localPosition = shapeValidation.spawnPosition;   
+            //currentShape.step = shapeValidation.step; 
+            //currentShape.layoutType = shapeValidation.shapeLayoutType;       
         }
         #endregion
 

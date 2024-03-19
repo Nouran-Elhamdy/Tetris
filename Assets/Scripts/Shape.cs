@@ -1,149 +1,123 @@
 using UnityEngine;
 using System;
 using Random = UnityEngine.Random;
-using System.Collections;
 using System.Collections.Generic;
+using System.Collections;
 
 namespace PuzzleGames
 {
-    [Serializable]
     public class Shape : MonoBehaviour
     {
         #region Public Variables
 
-        public ShapeType shapeType;
-        public ShapeLayoutType layoutType;
-        public GameObject shapePrefab;
-        public int shapeRotation = 0;
-        public bool canMoveInY;
-        public bool canRotate;
-        public bool canMoveRight;
-        public bool canMoveLeft;
-        public bool isGrounded;
-        public float step;
-        public List<ShapeValidation> shapeValidations = new List<ShapeValidation>();
-        int index;
-        public BoxCollider2D topCollider;
-        public BoxCollider2D botCollider;
-        public BoxCollider2D leftCollider;
-        public BoxCollider2D rightCollider;
+        public ShapeType shapeType = default;
+        public GameObject shapePrefab = default;
+        public bool canMoveInY = default;
+        public RectInt rectInt = default;
+        public bool isLocked = default;
+        public List<Transform> tiles = default;
+
         #endregion
-        private void Start()
+        private void Update()
         {
-            index = (int)layoutType;
+            if (Input.GetKeyDown(KeyCode.LeftArrow) && !isLocked)
+            {
+                MoveInX(-1);
+            }
+            else if (Input.GetKeyDown(KeyCode.RightArrow) && !isLocked)
+            {
+                MoveInX(1);
+            }
+            else if (Input.GetKeyDown(KeyCode.UpArrow) && !isLocked)
+            {
+                Rotate();
+            }
+
+            else if (Input.GetKeyDown(KeyCode.DownArrow) || canMoveInY)
+            {
+                MoveInY();
+            }
         }
-        public int GetRandomRotation()
-        {
-            int randomIndex = Random.Range(0, shapeValidations.Count);
-            shapeRotation = shapeValidations[randomIndex].shapeRotation;
-            return shapeRotation;
-        }
+
+        //public int GetRandomRotation()
+        //{
+        //    int randomIndex = Random.Range(0, shapeValidations.Count);
+        //    shapeRotation = shapeValidations[randomIndex].shapeRotation;
+        //    return shapeRotation;
+        //}
 
         public int GetRandomFlip()
         {
             int randomIndex = Random.Range(0, Manager.ShapeManager.shapeScale.Length);
             return Manager.ShapeManager.shapeScale[randomIndex];
         }
-
-        public void MoveInX(int sign)
+        bool IsValidPositionX(int direction)
         {
-            transform.position = new Vector3(transform.position.x + (step * sign), transform.position.y, transform.position.z);
+            foreach (Transform t in tiles) 
+            { 
+                var tilePosition = new Vector2(Mathf.RoundToInt(t.position.x), Mathf.RoundToInt(t.position.y));
+                if (tilePosition.x + direction < rectInt.xMin || tilePosition.x + direction >= rectInt.xMax)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+        bool IsValidPositionY(int direction)
+        {
+            foreach (Transform t in tiles)
+            {
+                var tilePosition = new Vector2(Mathf.RoundToInt(t.position.x), Mathf.RoundToInt(t.position.y));
+                if (tilePosition.y + direction <= rectInt.yMin)
+                {
+                    isLocked = true;
+                    return false;
+                }
+            }
+            return true;
+        }
+        bool IsValidRotation()
+        {
+            foreach (Transform t in tiles)
+            {
+                var tilePosition = new Vector2(Mathf.RoundToInt(t.position.x), Mathf.RoundToInt(t.position.y));
+                if (tilePosition.y <= rectInt.yMin || tilePosition.x  < rectInt.xMin || tilePosition.x  >= rectInt.xMax)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+        public void MoveInX(int direction)
+        {
+            if (!IsValidPositionX(direction)) return;
+
+            transform.position += new Vector3(direction, 0, 0);
         }
         public void MoveInY()
         {
+            if (!IsValidPositionY(-1)) return;
+
             StartCoroutine(loopDelay());
             IEnumerator loopDelay()
             {
-                transform.position = new Vector3(transform.position.x, transform.position.y - 0.5f, transform.position.z);
+                transform.position += new Vector3(0, -1, 0);
                 canMoveInY = false;
-                yield return new WaitForSeconds(0.5f);
+                yield return new WaitForSeconds(1f);
                 canMoveInY = true;
             }
         }
         public void Rotate()
         {
-            if (index == 1)
-                index = 0;
-            else
-                index = 1;
+            transform.Rotate(new Vector3(0, 0, -90));
 
-            layoutType = (ShapeLayoutType)index;
-            switch (layoutType)
+            if(!IsValidRotation())
             {
-                case ShapeLayoutType.Horizontal:
-                    shapeRotation = 0;
-                    break;
-                case ShapeLayoutType.Vertical:
-                    shapeRotation = 90;
-                    break;
-                default:
-                    break;
+                transform.Rotate(new Vector3(0, 0, 90));
             }
+        }
 
-            switch (shapeType)
-            {
-                case ShapeType.I_Shaped:
-                    transform.localEulerAngles = new Vector3(transform.position.x, transform.position.y, shapeRotation);
-                    break;
-                case ShapeType.L_Shaped:
-                case ShapeType.T_Shaped:
-                case ShapeType.S_Shaped:
-                    transform.Rotate(new Vector3(transform.position.x, transform.position.y, transform.position.z + 90));
-                    break;
-                case ShapeType.O_Shaped:
-                    break;
-                default:
-                    break;
-            }
-            StartCoroutine(RefreshTrigger());
-        }
-        IEnumerator RefreshTrigger()
-        {
-            BoxCollider2D boxCollider2D = GetComponent<BoxCollider2D>();
-            boxCollider2D.isTrigger = false;
-            yield return new WaitForSeconds(0.05f);
-            boxCollider2D.isTrigger = true;
-        }
-        //TODO transfer this code in another script for edge colliding
-        private void OnCollisionEnter2D(Collision2D collision)
-        {
-            if (collision.otherCollider.gameObject.CompareTag("Top"))
-            {
-                if (collision.gameObject.GetComponent<Shape>())
-                {
-                    collision.gameObject.GetComponent<Shape>().isGrounded = true;
-                    canMoveRight = false;
-                    canMoveLeft = false;
-                }
-            }
-            else if (collision.otherCollider.gameObject.CompareTag("Right"))
-            {
-                canMoveRight = false;
-                canMoveLeft = true;
-            }
-            else if (collision.otherCollider.gameObject.CompareTag("Left"))
-            {
-                canMoveLeft = false;
-                canMoveRight = true;
-            }
-            else if (collision.otherCollider.gameObject.CompareTag("Bottom"))
-            {
-                canMoveLeft = false;
-                canMoveRight = true;
-            }
 
-        }
-        private void OnCollisionExit2D(Collision2D collision)
-        {
-            if (collision.otherCollider.gameObject.CompareTag("Right"))
-            {
-                canMoveRight = true;
-            }
-            else if (collision.otherCollider.gameObject.CompareTag("Left"))
-            {
-                canMoveLeft = true;
-            }
-        }
     }
 }
 public enum ShapeType
@@ -152,20 +126,7 @@ public enum ShapeType
     L_Shaped,
     T_Shaped,
     O_Shaped,
-    S_Shaped
+    S_Shaped,
+    Z_Shaped,
+    J_Shaped
 }
-public enum ShapeLayoutType
-{
-    Horizontal,
-    Vertical,
-}
-[Serializable]
-public class ShapeValidation
-{
-    public ShapeLayoutType shapeLayoutType;
-    public int shapeRotation;
-    public Vector2 spawnPosition;
-    public float step;
-}
-
-
