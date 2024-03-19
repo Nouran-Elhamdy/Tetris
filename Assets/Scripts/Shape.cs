@@ -1,7 +1,6 @@
 using UnityEngine;
 using System;
 using Random = UnityEngine.Random;
-using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -20,7 +19,7 @@ namespace PuzzleGames
         public bool canRotate;
         public bool canMoveRight;
         public bool canMoveLeft;
-        public bool isGround;
+        public bool isGrounded;
         public float step;
         public List<ShapeValidation> shapeValidations = new List<ShapeValidation>();
         int index;
@@ -108,35 +107,39 @@ namespace PuzzleGames
         //TODO transfer this code in another script for edge colliding
         private void OnCollisionEnter2D(Collision2D collision)
         {
-            if (topCollider.gameObject.CompareTag("Top"))
+            if (collision.otherCollider.gameObject.CompareTag("Top"))
             {
-                if(collision.gameObject.GetComponent<Shape>())
+                if (collision.gameObject.GetComponent<Shape>())
                 {
-                    collision.gameObject.GetComponent<Shape>().isGround = true;
+                    collision.gameObject.GetComponent<Shape>().isGrounded = true;
                     canMoveRight = false;
                     canMoveLeft = false;
                 }
             }
-            else if (rightCollider.gameObject.CompareTag("Right"))
+            else if (collision.otherCollider.gameObject.CompareTag("Right"))
             {
                 canMoveRight = false;
                 canMoveLeft = true;
             }
-            else if (leftCollider.gameObject.CompareTag("Left"))
+            else if (collision.otherCollider.gameObject.CompareTag("Left"))
             {
-              
-
                 canMoveLeft = false;
                 canMoveRight = true;
             }
+            else if (collision.otherCollider.gameObject.CompareTag("Bottom"))
+            {
+                canMoveLeft = false;
+                canMoveRight = true;
+            }
+
         }
         private void OnCollisionExit2D(Collision2D collision)
         {
-            if (rightCollider.gameObject.CompareTag("Right"))
+            if (collision.otherCollider.gameObject.CompareTag("Right"))
             {
                 canMoveRight = true;
             }
-            else if (leftCollider.gameObject.CompareTag("Left"))
+            else if (collision.otherCollider.gameObject.CompareTag("Left"))
             {
                 canMoveLeft = true;
             }

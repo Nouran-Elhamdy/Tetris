@@ -9,6 +9,8 @@ namespace PuzzleGames
         [SerializeField] ShapeSpawner shapeSpawner;
         private void Update()
         {
+            if (shapeSpawner.currentShape == null) return;
+
             if(Input.GetKeyDown(KeyCode.LeftArrow) && shapeSpawner.currentShape.canMoveLeft)
             {
                 shapeSpawner.currentShape.MoveInX(-1);
@@ -23,7 +25,7 @@ namespace PuzzleGames
                 shapeSpawner.currentShape.Rotate();
             }
 
-            if(shapeSpawner.currentShape != null && shapeSpawner.currentShape.canMoveInY && !shapeSpawner.currentShape.isGround)
+            if(shapeSpawner.currentShape != null && shapeSpawner.currentShape.canMoveInY && !shapeSpawner.currentShape.isGrounded)
             {
                shapeSpawner.currentShape.MoveInY();
             }

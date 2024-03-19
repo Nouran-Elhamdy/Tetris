@@ -7,17 +7,17 @@ namespace KAlabs
     {
         public bool isOccupied;
 
-        private void OnTriggerEnter2D(Collider2D collision)
-        {
-            if (collision.gameObject.TryGetComponent(out Tile tile))
-            {
-                isOccupied = true;
-            }
-        }
-        private void OnTriggerExit2D(Collider2D collision)
-        {
-            isOccupied = false;
-        }
+        //private void OnTriggerEnter2D(Collider2D collision)
+        //{
+        //    if (collision.gameObject.TryGetComponent(out Tile tile))
+        //    {
+        //        isOccupied = true;
+        //    }
+        //}
+        //private void OnTriggerExit2D(Collider2D collision)
+        //{
+        //    isOccupied = false;
+        //}
     }
 
 }

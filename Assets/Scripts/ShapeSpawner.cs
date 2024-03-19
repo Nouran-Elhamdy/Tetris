@@ -23,7 +23,9 @@ namespace PuzzleGames
         }
         private void Update()
         {
-            if(currentShape.isGround && canSpawn)
+            if (currentShape == null) return;
+
+            if(currentShape.isGrounded && canSpawn)
             {
                 Spawn();   
             }

@@ -15,7 +15,7 @@ namespace PuzzleGames
                 {
                     if (tag == "Bottom")
                     {
-                        shape.isGround = true;
+                        shape.isGrounded = true;
                     }
                     else if (tag == "Right")
                     {
