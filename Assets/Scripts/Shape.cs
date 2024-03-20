@@ -134,7 +134,11 @@ namespace PuzzleGames
         }
         public void MoveInY()
         {
-            if (!IsValidPositionY(-1)) return;
+            if (!IsValidPositionY(-1))
+            {
+                ShapeSpawner.Instance.DetectCompleteLines();
+                return;
+            }
 
             StartCoroutine(loopDelay());
             IEnumerator loopDelay()

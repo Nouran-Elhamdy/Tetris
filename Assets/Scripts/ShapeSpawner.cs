@@ -8,8 +8,8 @@ namespace PuzzleGames
     {
         #region Public Variables
         public List<Shape> shapes;
-        public Shape currentShape;
-        public Shape nextShape;
+        public Shape currentShape { get; private set; }
+        public Shape nextShape { get; private set; }
         public Transform[,] Grid = new Transform[10, 20];
         public static ShapeSpawner Instance;
         #endregion
@@ -37,6 +37,7 @@ namespace PuzzleGames
         {
             int randomIndex = Random.Range(0, shapes.Count);
             currentShape = Instantiate(shapes[randomIndex], new Vector3(5, 20, 0), Quaternion.identity);
+            currentShape.transform.SetParent(transform);
         }
         public void UpdateGrid()
         {
@@ -44,9 +45,8 @@ namespace PuzzleGames
             {
                 Grid[Mathf.RoundToInt(tile.transform.position.x), Mathf.RoundToInt(tile.transform.position.y)] = tile.transform;
             }
-            DetectCompleteLines();
         }
-        private void DetectCompleteLines()
+        public void DetectCompleteLines()
         {
             bool isCompleteLine;
             for (int i = 0; i < 20; i++)
@@ -62,8 +62,8 @@ namespace PuzzleGames
                 }
                 if (isCompleteLine)
                 {
-                    ClearLine(i);
                     Debug.Log("Complete line found at row: " + i);
+                    ClearLine(i);
                 }
             }
         }
@@ -72,10 +72,29 @@ namespace PuzzleGames
             for (int i = 0; i < 10; i++)
             {
                 Destroy(Grid[i, row].gameObject);
-                Grid[row, i] = null;
+                Grid[i, row] = null;
+            }
+            ShiftAllRows(row);
+        }
+        private void ShiftRow(int row)
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                if (Grid[i, row] != null)
+                {
+                    Grid[i, row - 1] = Grid[i, row];
+                    Grid[i, row] = null;
+                    Grid[i, row - 1].position += new Vector3(0, -1, 0);
+                }
             }
         }
-      
+        private void ShiftAllRows(int row)
+        {
+            for (int i = row + 1; i < 20; i++)
+            {
+                ShiftRow(i);
+            }
+        }
         #endregion
 
         #region Private Methods

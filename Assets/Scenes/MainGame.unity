@@ -1555,6 +1555,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shapes:
   - {fileID: -5045364442820663555, guid: 9558ec1f543630c44ab9b31fdf19b3c5, type: 3}
+  - {fileID: -7925357994509141724, guid: 14f0ccb82167f964a81c66afaadb41b4, type: 3}
+  - {fileID: -4516231039628784940, guid: 356c6e12ec4ed794a8779be53191f667, type: 3}
+  - {fileID: 3729768696900346688, guid: e4ae16361e90e81489a4f38e5121314d, type: 3}
+  - {fileID: -2870778106291554274, guid: 3b5400d46889ebd4f85dc11ea7548d3c, type: 3}
+  - {fileID: 4621620488933195647, guid: db19e5316803b684c8ecc8089357ead2, type: 3}
+  - {fileID: 6365617764317490031, guid: 3d97c0d09ab38664da658d1b66a4553c, type: 3}
   currentShape: {fileID: 0}
   nextShape: {fileID: 0}
 --- !u!4 &1639643273
