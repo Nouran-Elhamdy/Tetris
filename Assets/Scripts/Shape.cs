@@ -3,6 +3,7 @@ using System;
 using Random = UnityEngine.Random;
 using System.Collections.Generic;
 using System.Collections;
+using Unity.VisualScripting;
 
 namespace PuzzleGames
 {
@@ -15,7 +16,6 @@ namespace PuzzleGames
         public bool canMoveInY = default;
         public RectInt rectInt = default;
         public bool isLocked = default;
-        public List<Transform> tiles = default;
 
         #endregion
         private void Update()
@@ -39,22 +39,27 @@ namespace PuzzleGames
             }
         }
 
-        //public int GetRandomRotation()
-        //{
-        //    int randomIndex = Random.Range(0, shapeValidations.Count);
-        //    shapeRotation = shapeValidations[randomIndex].shapeRotation;
-        //    return shapeRotation;
-        //}
-
-        public int GetRandomFlip()
-        {
-            int randomIndex = Random.Range(0, Manager.ShapeManager.shapeScale.Length);
-            return Manager.ShapeManager.shapeScale[randomIndex];
-        }
         bool IsValidPositionX(int direction)
         {
-            foreach (Transform t in tiles) 
-            { 
+            foreach (Transform t in transform)
+            {
+                var tilePosition = new Vector2(Mathf.RoundToInt(t.position.x + direction), Mathf.RoundToInt(t.position.y));
+                for (int i = 0; i < 10; i++)
+                {
+                    for (int j = 0; j < 20; j++)
+                    {
+                        if (ShapeSpawner.Instance.Grid[i, j] != null)
+                        {
+                            if ((Vector2)ShapeSpawner.Instance.Grid[i, j].position == tilePosition)
+                            {
+                                return false;
+                            }
+                        }
+                    }
+                }
+            }
+            foreach (Transform t in transform)
+            {
                 var tilePosition = new Vector2(Mathf.RoundToInt(t.position.x), Mathf.RoundToInt(t.position.y));
                 if (tilePosition.x + direction < rectInt.xMin || tilePosition.x + direction >= rectInt.xMax)
                 {
@@ -65,10 +70,24 @@ namespace PuzzleGames
         }
         bool IsValidPositionY(int direction)
         {
-            foreach (Transform t in tiles)
+            foreach (Transform t in transform)
             {
-                var tilePosition = new Vector2(Mathf.RoundToInt(t.position.x), Mathf.RoundToInt(t.position.y));
-                if (tilePosition.y + direction <= rectInt.yMin)
+                var tilePosition = new Vector2(Mathf.RoundToInt(t.position.x), Mathf.RoundToInt(t.position.y + direction));
+                for (int i = 0; i < 10; i++)
+                {
+                    for (int j = 0; j < 20; j++)
+                    {
+                        if (ShapeSpawner.Instance.Grid[i, j] != null)
+                        {
+                            if ((Vector2)ShapeSpawner.Instance.Grid[i, j].position == tilePosition)
+                            {
+                                isLocked = true;
+                                return false;
+                            }
+                        }
+                    }
+                }
+                if (tilePosition.y + direction < rectInt.yMin)
                 {
                     isLocked = true;
                     return false;
@@ -78,10 +97,29 @@ namespace PuzzleGames
         }
         bool IsValidRotation()
         {
-            foreach (Transform t in tiles)
+            foreach (Transform t in transform)
             {
                 var tilePosition = new Vector2(Mathf.RoundToInt(t.position.x), Mathf.RoundToInt(t.position.y));
-                if (tilePosition.y <= rectInt.yMin || tilePosition.x  < rectInt.xMin || tilePosition.x  >= rectInt.xMax)
+                for (int i = 0; i < 10; i++)
+                {
+                    for (int j = 0; j < 20; j++)
+                    {
+                        if (ShapeSpawner.Instance.Grid[i, j] != null)
+                        {
+
+                            if ((Vector2)ShapeSpawner.Instance.Grid[i, j].position == tilePosition)
+                            {
+                                return false;
+                            }
+                        }
+                    }
+                }
+            }
+
+            foreach (Transform t in transform)
+            {
+                var tilePosition = new Vector2(Mathf.RoundToInt(t.position.x), Mathf.RoundToInt(t.position.y));
+                if (tilePosition.y <= rectInt.yMin || tilePosition.x < rectInt.xMin || tilePosition.x >= rectInt.xMax)
                 {
                     return false;
                 }
@@ -113,7 +151,7 @@ namespace PuzzleGames
 
             transform.Rotate(new Vector3(0, 0, -90));
 
-            if(!IsValidRotation())
+            if (!IsValidRotation())
             {
                 transform.Rotate(new Vector3(0, 0, 90));
             }

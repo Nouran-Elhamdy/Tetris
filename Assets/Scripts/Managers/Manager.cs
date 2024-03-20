@@ -18,16 +18,16 @@ namespace PuzzleGames
             }
         }
 
-        private static ShapeManager m_ShapeManager;
-        public static ShapeManager ShapeManager
-        {
-            get
-            {
-                if (!m_ShapeManager)
-                    m_ShapeManager = GetManager<ShapeManager>();
-                return m_ShapeManager;
-            }
-        }
+        //private static ShapeManager m_ShapeManager;
+        //public static ShapeManager ShapeManager
+        //{
+        //    get
+        //    {
+        //        if (!m_ShapeManager)
+        //            m_ShapeManager = GetManager<ShapeManager>();
+        //        return m_ShapeManager;
+        //    }
+        //}
         private static UIManager m_UIManager;
         public static UIManager UIManager
         {
