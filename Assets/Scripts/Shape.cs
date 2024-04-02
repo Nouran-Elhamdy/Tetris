@@ -1,9 +1,5 @@
 using UnityEngine;
-using System;
-using Random = UnityEngine.Random;
-using System.Collections.Generic;
 using System.Collections;
-using Unity.VisualScripting;
 
 namespace PuzzleGames
 {
@@ -12,9 +8,7 @@ namespace PuzzleGames
         #region Public Variables
 
         public ShapeType shapeType = default;
-        public GameObject shapePrefab = default;
         public bool canMoveInY = default;
-        public RectInt rectInt = default;
         public bool isLocked = default;
 
         #endregion
@@ -33,10 +27,12 @@ namespace PuzzleGames
                 Rotate();
             }
 
-            else if (Input.GetKeyDown(KeyCode.DownArrow) || canMoveInY)
+            else if ((Input.GetKeyDown(KeyCode.DownArrow) && ShapeSpawner.Instance.CanSpawn && !isLocked) || (canMoveInY && ShapeSpawner.Instance.CanSpawn && !isLocked))
             {
                 MoveInY();
             }
+            ShapeSpawner.Instance.DetectCompleteLines();
+
         }
 
         bool IsValidPositionX(int direction)
@@ -61,7 +57,7 @@ namespace PuzzleGames
             foreach (Transform t in transform)
             {
                 var tilePosition = new Vector2(Mathf.RoundToInt(t.position.x), Mathf.RoundToInt(t.position.y));
-                if (tilePosition.x + direction < rectInt.xMin || tilePosition.x + direction >= rectInt.xMax)
+                if (tilePosition.x + direction < ShapeSpawner.Instance.RectInt.xMin || tilePosition.x + direction >= ShapeSpawner.Instance.RectInt.xMax)
                 {
                     return false;
                 }
@@ -87,7 +83,7 @@ namespace PuzzleGames
                         }
                     }
                 }
-                if (tilePosition.y + direction < rectInt.yMin)
+                if (tilePosition.y + direction < ShapeSpawner.Instance.RectInt.yMin)
                 {
                     isLocked = true;
                     return false;
@@ -119,7 +115,10 @@ namespace PuzzleGames
             foreach (Transform t in transform)
             {
                 var tilePosition = new Vector2(Mathf.RoundToInt(t.position.x), Mathf.RoundToInt(t.position.y));
-                if (tilePosition.y <= rectInt.yMin || tilePosition.x < rectInt.xMin || tilePosition.x >= rectInt.xMax)
+                if (tilePosition.y <= ShapeSpawner.Instance.RectInt.yMin || 
+                    tilePosition.x < ShapeSpawner.Instance.RectInt.xMin || 
+                    tilePosition.x >= ShapeSpawner.Instance.RectInt.xMax ||
+                    tilePosition.y >= ShapeSpawner.Instance.RectInt.yMax)
                 {
                     return false;
                 }
@@ -136,7 +135,6 @@ namespace PuzzleGames
         {
             if (!IsValidPositionY(-1))
             {
-                ShapeSpawner.Instance.DetectCompleteLines();
                 return;
             }
 

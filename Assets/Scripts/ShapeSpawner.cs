@@ -1,6 +1,7 @@
 using UnityEngine;
 using Random = UnityEngine.Random;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 
 namespace PuzzleGames
 {
@@ -8,10 +9,13 @@ namespace PuzzleGames
     {
         #region Public Variables
         public List<Shape> shapes;
-        public Shape currentShape { get; private set; }
-        public Shape nextShape { get; private set; }
+        public Shape CurrentShape { get; private set; }
+
+        public Shape NextShape { get; private set; }
         public Transform[,] Grid = new Transform[10, 20];
         public static ShapeSpawner Instance;
+        public RectInt RectInt = default;
+        public bool CanSpawn;
         #endregion
 
         #region Public Methods
@@ -25,25 +29,35 @@ namespace PuzzleGames
         }
         private void Update()
         {
-            if (currentShape == null) return;
+            if (CurrentShape == null) return;
 
-            if (currentShape.isLocked)
+            if (CurrentShape.isLocked && CanSpawn)
             {
                 UpdateGrid();
                 Spawn();
+                ClearHierarchy(); 
             }
         }
         public void Spawn()
         {
             int randomIndex = Random.Range(0, shapes.Count);
-            currentShape = Instantiate(shapes[randomIndex], new Vector3(5, 20, 0), Quaternion.identity);
-            currentShape.transform.SetParent(transform);
+            CurrentShape = Instantiate(shapes[randomIndex], new Vector3(5, 20, 0), Quaternion.identity);
+            CurrentShape.transform.SetParent(transform);
         }
         public void UpdateGrid()
         {
-            foreach (Transform tile in currentShape.transform)
+            foreach (Transform tile in CurrentShape.transform)
             {
-                Grid[Mathf.RoundToInt(tile.transform.position.x), Mathf.RoundToInt(tile.transform.position.y)] = tile.transform;
+                var tilePosition = new Vector2(Mathf.RoundToInt(tile.position.x), Mathf.RoundToInt(tile.position.y + 1));
+                if (tilePosition.y >= RectInt.yMax) 
+                {
+                    Debug.Log("GAME OVER"); 
+                    CanSpawn = false;   
+                }
+                else
+                {
+                    Grid[Mathf.RoundToInt(tile.transform.position.x), Mathf.RoundToInt(tile.transform.position.y)] = tile.transform;
+                }
             }
         }
         public void DetectCompleteLines()
@@ -93,6 +107,18 @@ namespace PuzzleGames
             for (int i = row + 1; i < 20; i++)
             {
                 ShiftRow(i);
+            }
+        }
+        private void ClearHierarchy()
+        {
+            Shape[] shapes = FindObjectsOfType<Shape>();
+
+            foreach (Shape shape in shapes)
+            {
+                if (shape.transform.childCount == 0)
+                {
+                    Destroy(shape.gameObject);
+                }
             }
         }
         #endregion
