@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace PuzzleGames
@@ -13,6 +14,15 @@ namespace PuzzleGames
         {
             SwitchToView(ViewType.StartView);
         }
+        private void OnEnable()
+        {
+            GameStatus.StartGame += OnGameStated;
+            GameStatus.GameOver += OnGameOver;
+        }
+        private void OnDisable()
+        {
+            GameStatus.GameOver -= OnGameOver;
+        }     
         #endregion
 
         #region Public Methods
@@ -23,7 +33,16 @@ namespace PuzzleGames
             var viewToEnable = gameViews.Find(x => x.viewType == view1);
             viewToEnable.baseView.ShowView();
         }
+
         #endregion
+        private void OnGameOver()
+        {
+           SwitchToView(ViewType.GameOverView);
+        }
+        private void OnGameStated()
+        {
+            SwitchToView(ViewType.GameView);
+        }
     }
 }
 

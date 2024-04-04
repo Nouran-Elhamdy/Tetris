@@ -216,20 +216,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a58aaa78c835bf4b9a11558a3453c70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shapeType: 0
-  shapePrefab: {fileID: 0}
   canMoveInY: 1
-  rectInt:
-    x: 0
-    y: 0
-    width: 10
-    height: 20
   isLocked: 0
-  tiles:
-  - {fileID: 4019669277792755058}
-  - {fileID: 5217814778091536882}
-  - {fileID: 425022278989211532}
-  - {fileID: 4834342063068974239}
+  shapeType: 0
+  shapeState: 0
+  liveColor: {r: 0.5294118, g: 0.83921576, b: 1, a: 1}
+  ghostColor: {r: 0.5294118, g: 0.83921576, b: 1, a: 0.3529412}
+  canReceiveInput: 1
 --- !u!1 &5002482876667796322
 GameObject:
   m_ObjectHideFlags: 0

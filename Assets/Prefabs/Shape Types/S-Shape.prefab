@@ -384,17 +384,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a58aaa78c835bf4b9a11558a3453c70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shapeType: 4
-  shapePrefab: {fileID: 0}
   canMoveInY: 1
-  rectInt:
-    x: 0
-    y: 0
-    width: 10
-    height: 20
   isLocked: 0
-  tiles:
-  - {fileID: 2335818649986605014}
-  - {fileID: 44625307911704127}
-  - {fileID: 522388118404871270}
-  - {fileID: 1557008542330534870}
+  shapeType: 4
+  shapeState: 0
+  liveColor: {r: 1, g: 0.37647063, b: 0.37647063, a: 1}
+  ghostColor: {r: 1, g: 0.37647063, b: 0.37647063, a: 0.3529412}
+  canReceiveInput: 1

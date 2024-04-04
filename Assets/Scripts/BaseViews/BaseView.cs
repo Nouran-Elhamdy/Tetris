@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BaseView : MonoBehaviour
 {
@@ -26,5 +27,5 @@ public enum ViewType
 {
     StartView,
     GameView,
-    LevelCompletedView
+    GameOverView
 }

@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -26,8 +23,7 @@ namespace PuzzleGames
         #region Unity GUI Callbacks
         public void OnClickStartButton()
         {
-            Manager.UIManager.SwitchToView(ViewType.GameView);
-            LevelManager.OnLevelStarted?.Invoke();
+            GameStatus.StartGame?.Invoke();
         }
         #endregion
 

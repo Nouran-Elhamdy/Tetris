@@ -1,21 +1,20 @@
 using UnityEngine;
 using Random = UnityEngine.Random;
 using System.Collections.Generic;
-using Unity.VisualScripting;
+using System;
 
 namespace PuzzleGames
 {
     public class ShapeSpawner : MonoBehaviour
     {
         #region Public Variables
+        public RectInt RectInt = default;
         public List<Shape> shapes;
         public Shape CurrentShape { get; private set; }
+        public Shape CurrentGhostShape { get; private set; }
 
-        public Shape NextShape { get; private set; }
         public Transform[,] Grid = new Transform[10, 20];
         public static ShapeSpawner Instance;
-        public RectInt RectInt = default;
-        public bool CanSpawn;
         #endregion
 
         #region Public Methods
@@ -23,36 +22,69 @@ namespace PuzzleGames
         {
             Instance = this;
         }
-        private void Start()
+        private void OnEnable()
         {
-            Spawn();
+            GameStatus.StartGame += OnGameStarted;
+        }
+
+        private void OnDisable()
+        {
+            GameStatus.StartGame -= OnGameStarted;
         }
         private void Update()
         {
             if (CurrentShape == null) return;
 
-            if (CurrentShape.isLocked && CanSpawn)
+            CurrentGhostShape.transform.rotation = CurrentShape.transform.rotation;
+            CurrentGhostShape.transform.position = CurrentShape.transform.position;
+
+            if (CurrentShape.isLocked && Manager.GameStatus.IsGameStarted)
             {
+                Destroy(CurrentGhostShape.gameObject);
                 UpdateGrid();
-                Spawn();
-                ClearHierarchy(); 
+                SpawnShape();
+                SpawnGhostShape();
+                ClearHierarchy();
             }
+            DetectCompleteLines();
         }
-        public void Spawn()
+
+        private void OnGameStarted()
+        {
+            ClearGrid();
+            SpawnShape();
+            SpawnGhostShape();
+        }
+
+        private void SpawnShape()
         {
             int randomIndex = Random.Range(0, shapes.Count);
             CurrentShape = Instantiate(shapes[randomIndex], new Vector3(5, 20, 0), Quaternion.identity);
             CurrentShape.transform.SetParent(transform);
+            CurrentShape.shapeState = ShapeState.Live;
+        }
+        private void SpawnGhostShape()
+        {
+            CurrentGhostShape = Instantiate(CurrentShape, new Vector3(5, 20, 0), Quaternion.identity);
+            CurrentGhostShape.transform.SetParent(transform);
+            CurrentGhostShape.shapeState = ShapeState.Ghost;
+            CurrentGhostShape.canMoveInY = false;
+
+            foreach (Transform tile in CurrentGhostShape.transform)
+            {
+                tile.gameObject.GetComponent<SpriteRenderer>().color = CurrentShape.ghostColor;
+            }
         }
         public void UpdateGrid()
         {
             foreach (Transform tile in CurrentShape.transform)
             {
-                var tilePosition = new Vector2(Mathf.RoundToInt(tile.position.x), Mathf.RoundToInt(tile.position.y + 1));
-                if (tilePosition.y >= RectInt.yMax) 
+                var tilePosition = new Vector2(Mathf.RoundToInt(tile.position.x), Mathf.RoundToInt(tile.position.y));
+                if (tilePosition.y > RectInt.yMax - 1)
                 {
-                    Debug.Log("GAME OVER"); 
-                    CanSpawn = false;   
+                    Debug.Log("GAME OVER");
+                    GameStatus.GameOver?.Invoke();
+                    break;
                 }
                 else
                 {
@@ -120,6 +152,25 @@ namespace PuzzleGames
                     Destroy(shape.gameObject);
                 }
             }
+        }
+        private void ClearGrid()
+        {
+            foreach (Transform child in transform)
+            {
+                Destroy(child.gameObject);
+            }
+            //for (int i = 0; i < 20; i++)
+            //{
+            //    for (int j = 0; j < 10; j++)
+            //    {
+            //        if (Grid[j, i] != null)
+            //        {
+            //            Grid[i, j] = null;    
+            //        }
+            //    }
+            //}
+            CurrentShape = null;
+            CurrentGhostShape = null;
         }
         #endregion
 

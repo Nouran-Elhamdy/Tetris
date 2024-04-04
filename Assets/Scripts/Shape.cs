@@ -7,35 +7,44 @@ namespace PuzzleGames
     {
         #region Public Variables
 
-        public ShapeType shapeType = default;
         public bool canMoveInY = default;
         public bool isLocked = default;
-
+        public ShapeType shapeType = default;
+        public ShapeState shapeState = default;
+        public Color liveColor;
+        public Color ghostColor;
         #endregion
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.LeftArrow) && !isLocked)
+            if(!isLocked)
             {
-                MoveInX(-1);
-            }
-            else if (Input.GetKeyDown(KeyCode.RightArrow) && !isLocked)
-            {
-                MoveInX(1);
-            }
-            else if (Input.GetKeyDown(KeyCode.UpArrow) && !isLocked)
-            {
-                Rotate();
-            }
+                if (Input.GetKeyDown(KeyCode.LeftArrow))
+                {
+                    MoveInX(-1);
+                }
+                else if (Input.GetKeyDown(KeyCode.RightArrow))
+                {
+                    MoveInX(1);
+                }
+                else if (Input.GetKeyDown(KeyCode.UpArrow))
+                {
+                    Rotate();
+                }
 
-            else if ((Input.GetKeyDown(KeyCode.DownArrow) && ShapeSpawner.Instance.CanSpawn && !isLocked) || (canMoveInY && ShapeSpawner.Instance.CanSpawn && !isLocked))
-            {
-                MoveInY();
+                else if (Input.GetKeyDown(KeyCode.DownArrow) || canMoveInY)
+                {
+                    if(shapeState == ShapeState.Live && Manager.GameStatus.IsGameStarted)
+                    { 
+                        MoveInY();
+                    }
+                }
+                if(shapeState == ShapeState.Ghost)
+                {
+                    MoveGhostShape();
+                }
             }
-            ShapeSpawner.Instance.DetectCompleteLines();
-
         }
-
-        bool IsValidPositionX(int direction)
+        private bool IsValidPositionX(int direction)
         {
             foreach (Transform t in transform)
             {
@@ -64,7 +73,7 @@ namespace PuzzleGames
             }
             return true;
         }
-        bool IsValidPositionY(int direction)
+        private bool IsValidPositionY(int direction)
         {
             foreach (Transform t in transform)
             {
@@ -91,7 +100,7 @@ namespace PuzzleGames
             }
             return true;
         }
-        bool IsValidRotation()
+        private bool IsValidPositionForGhostShape()
         {
             foreach (Transform t in transform)
             {
@@ -102,10 +111,36 @@ namespace PuzzleGames
                     {
                         if (ShapeSpawner.Instance.Grid[i, j] != null)
                         {
-
                             if ((Vector2)ShapeSpawner.Instance.Grid[i, j].position == tilePosition)
                             {
                                 return false;
+                            }
+                        }
+                    }
+                }
+                if (tilePosition.y <= ShapeSpawner.Instance.RectInt.yMin)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+        private bool IsValidRotation()
+        {
+            bool isRotating;
+            foreach (Transform t in transform)
+            {
+                var tilePosition = new Vector2(Mathf.RoundToInt(t.position.x), Mathf.RoundToInt(t.position.y));
+                for (int i = 0; i < 10; i++)
+                {
+                    for (int j = 0; j < 20; j++)
+                    {
+                        if (ShapeSpawner.Instance.Grid[i, j] != null)
+                        {
+                            if ((Vector2)ShapeSpawner.Instance.Grid[i, j].position == tilePosition)
+                            {
+                                isRotating = false;
+                                return isRotating;
                             }
                         }
                     }
@@ -115,23 +150,25 @@ namespace PuzzleGames
             foreach (Transform t in transform)
             {
                 var tilePosition = new Vector2(Mathf.RoundToInt(t.position.x), Mathf.RoundToInt(t.position.y));
-                if (tilePosition.y <= ShapeSpawner.Instance.RectInt.yMin || 
-                    tilePosition.x < ShapeSpawner.Instance.RectInt.xMin || 
+                if (tilePosition.y <= ShapeSpawner.Instance.RectInt.yMin ||
+                    tilePosition.x < ShapeSpawner.Instance.RectInt.xMin ||
                     tilePosition.x >= ShapeSpawner.Instance.RectInt.xMax ||
                     tilePosition.y >= ShapeSpawner.Instance.RectInt.yMax)
                 {
-                    return false;
+                    isRotating = false;
+                    return isRotating;
                 }
             }
-            return true;
+            isRotating = true;
+            return isRotating;
         }
-        public void MoveInX(int direction)
+        private void MoveInX(int direction)
         {
             if (!IsValidPositionX(direction)) return;
 
             transform.position += new Vector3(direction, 0, 0);
         }
-        public void MoveInY()
+        private void MoveInY()
         {
             if (!IsValidPositionY(-1))
             {
@@ -147,7 +184,7 @@ namespace PuzzleGames
                 canMoveInY = true;
             }
         }
-        public void Rotate()
+        private void Rotate()
         {
             if (shapeType == ShapeType.O_Shaped) return;
 
@@ -158,8 +195,17 @@ namespace PuzzleGames
                 transform.Rotate(new Vector3(0, 0, 90));
             }
         }
-
-
+        private void MoveGhostShape()
+        {
+            while (IsValidPositionForGhostShape())
+            {
+                transform.position += new Vector3(0, -1, 0);
+            }
+            if (!IsValidPositionForGhostShape())
+            {
+                transform.position += new Vector3(0, 1, 0);
+            }
+        }
     }
 }
 public enum ShapeType
@@ -171,4 +217,9 @@ public enum ShapeType
     S_Shaped,
     Z_Shaped,
     J_Shaped
+}
+public enum ShapeState
+{
+    Live,
+    Ghost
 }

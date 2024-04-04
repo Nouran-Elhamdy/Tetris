@@ -28,14 +28,14 @@ namespace PuzzleGames
                 return m_UIManager;
             }
         }
-        private static LevelManager m_LevelManager;
-        public static LevelManager LevelManager
+        private static GameStatus m_GameStatus;
+        public static GameStatus GameStatus
         {
             get
             {
-                if (!m_LevelManager)
-                    m_LevelManager = GetManager<LevelManager>();
-                return m_LevelManager;
+                if (!m_GameStatus)
+                    m_GameStatus = GetManager<GameStatus>();
+                return m_GameStatus;
             }
         }
         private static PlayerInputsManager m_PlayerInputsManager;
